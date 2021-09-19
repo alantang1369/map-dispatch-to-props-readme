@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-
+import {addTodo} from './actions/todo'
 class App extends Component {
 
   state = {
@@ -13,15 +13,17 @@ class App extends Component {
       todo: event.target.value
     });
   }
-
+ 
   handleOnSubmit = event => {
     event.preventDefault();
     console.log("Todo being added: ", this.state.todo);
-    this.props.dispatch({ type: 'ADD_TODO', todo: this.state.todo });
+    this.props.addTodo(this.state.todo);
     this.setState({ todo: '' });
   }
 
+  
   render() {
+    
     const renderTodos = () => this.props.todos.map(todo => <li key={todo}>{todo}</li>);
     return (
       <div className="App">
@@ -47,4 +49,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    addTodo: (todo) => {
+      dispatch(addTodo(todo)) //dispatch(ation), action is a futnion returning a POJO.
+    }
+  };
+};
+// export default connect(state => ({ todos: state.todos }), { addTodo })(App); (alternative way to map state and dispatch to props of the connected component)
+export default connect(mapStateToProps, mapDispatchToProps)(App);
